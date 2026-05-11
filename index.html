@@ -59,7 +59,7 @@
   .cat-count { font-size: 11px; color: var(--muted); margin-top: 3px; }
 
   #pricing { background: var(--white); padding: 4rem 2rem; }
-  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; max-width: 820px; margin: 0 auto; }
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; max-width: 1000px; margin: 0 auto; }
   .plan { border: 0.5px solid var(--border); border-radius: 12px; padding: 1.75rem; background: var(--light); }
   .plan.featured { border: 2px solid var(--gold); background: var(--navy); color: #fff; }
   .plan-tag { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
@@ -111,7 +111,7 @@
   .video-sub-note { text-align: center; margin-top: 2rem; font-size: 13px; color: var(--muted); }
   .video-sub-note strong { color: var(--navy); }
 
-  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; max-width: 820px; margin: 0 auto; }
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; max-width: 1000px; margin: 0 auto; }
   footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 2rem; font-size: 12px; }
   footer span { color: var(--gold); }
 
@@ -409,7 +409,7 @@ const T = {
     pf2_1:"Unlimited consultations", pf2_2:"Chat + video calls", pf2_3:"Priority response", pf2_4:"Priority contact response",
     plan3_tag:"Business", plan3_name:"Team", plan3_period:"per month",
     pf3_1:"Up to 5 users", pf3_2:"All Pro features", pf3_3:"Dedicated expert", pf3_4:"Monthly report",
-    plan_cta:"Get started", plan_cta2:"Get started", plan_cta3:"Contact us",
+    plan_cta:"Get started", plan_cta2:"Get started", plan_cta3:"Get started", plan_cta4:"Get started", plan_cta5:"Contact us",
     req_title:"Contact us", req_sub:"Have a question? We will get back to you as soon as possible",
     f_name:"Your name", f_email:"Email address", f_cat:"Category", f_desc:"Describe your problem",
     f_contact:"Preferred contact method", f_submit:"Send message",
@@ -453,7 +453,7 @@ const T = {
     pf2_1:"Ubegrænset konsultationer", pf2_2:"Chat + videoopkald", pf2_3:"Prioriteret svar", pf2_4:"Prioriteret svar på kontakt",
     plan3_tag:"Erhverv", plan3_name:"Team", plan3_period:"pr. måned",
     pf3_1:"Op til 5 brugere", pf3_2:"Alle Pro-funktioner", pf3_3:"Dedikeret ekspert", pf3_4:"Månedlig rapport",
-    plan_cta:"Kom i gang", plan_cta2:"Kom i gang", plan_cta3:"Kontakt os",
+    plan_cta:"Kom i gang", plan_cta2:"Kom i gang", plan_cta3:"Kom i gang", plan_cta4:"Kom i gang", plan_cta5:"Kontakt os",
     req_title:"Kontakt os", req_sub:"Har du et spørgsmål? Vi vender tilbage hurtigst muligt",
     f_name:"Dit navn", f_email:"E-mailadresse", f_cat:"Kategori", f_desc:"Beskriv dit problem",
     f_contact:"Foretrukken kontaktform", f_submit:"Send besked",
