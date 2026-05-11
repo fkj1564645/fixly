@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fixly — Expert Home & Vehicle Consultations</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0B1F3A; --navy2: #162E50; --gold: #C8922A; --gold2: #E8AB3A;
+    --light: #F7F5F0; --white: #FFFFFF; --muted: #8A9BB0; --border: rgba(11,31,58,0.12);
+    --radius: 10px; --font: 'Georgia', serif; --sans: 'Trebuchet MS', sans-serif;
+  }
+  body { background: var(--light); font-family: var(--sans); color: var(--navy); }
+
+  nav { background: var(--navy); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; }
+  .logo { font-family: var(--font); color: var(--gold); font-size: 22px; letter-spacing: 1px; }
+  .logo span { color: #fff; }
+  .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+  .nav-links a { color: rgba(255,255,255,0.75); font-size: 13px; text-decoration: none; cursor: pointer; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold); }
+  .lang-select { background: transparent; border: 0.5px solid rgba(255,255,255,0.25); color: #fff; padding: 4px 8px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+  .lang-select option { background: var(--navy2); color: #fff; }
+
+  section { display: none; }
+  section.active { display: block; }
+
+  #home { background: var(--navy); padding: 5rem 2rem 4rem; text-align: center; }
+  .hero-tag { display: inline-block; background: rgba(200,146,42,0.2); color: var(--gold); font-size: 11px; letter-spacing: 2px; padding: 4px 14px; border-radius: 20px; margin-bottom: 1.5rem; text-transform: uppercase; }
+  .hero-title { font-family: var(--font); font-size: 42px; color: #fff; line-height: 1.2; margin-bottom: 1rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+  .hero-title em { color: var(--gold); font-style: normal; }
+  .hero-sub { color: rgba(255,255,255,0.6); font-size: 15px; max-width: 480px; margin: 0 auto 2.5rem; line-height: 1.7; }
+  .btn-primary { background: var(--gold); color: var(--navy); padding: 12px 28px; border-radius: var(--radius); font-size: 14px; font-weight: 700; border: none; cursor: pointer; transition: background 0.2s; }
+  .btn-primary:hover { background: var(--gold2); }
+  .btn-outline { background: transparent; color: #fff; padding: 12px 28px; border-radius: var(--radius); font-size: 14px; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; margin-left: 12px; transition: border-color 0.2s; }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  .stats-row { display: flex; justify-content: center; gap: 3rem; margin-top: 3.5rem; padding-top: 3rem; border-top: 0.5px solid rgba(255,255,255,0.1); }
+  .stat-item { text-align: center; }
+  .stat-num { font-family: var(--font); font-size: 28px; color: var(--gold); }
+  .stat-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+  #how { background: var(--white); padding: 4rem 2rem; }
+  .section-title { text-align: center; font-family: var(--font); font-size: 28px; color: var(--navy); margin-bottom: 0.5rem; }
+  .section-sub { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 3rem; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 860px; margin: 0 auto; }
+  .step-card { background: var(--light); border-radius: var(--radius); padding: 1.75rem; border: 0.5px solid var(--border); }
+  .step-num { width: 36px; height: 36px; border-radius: 50%; background: var(--navy); color: var(--gold); font-family: var(--font); font-size: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+  .step-card h3 { font-size: 15px; color: var(--navy); margin-bottom: 0.5rem; font-family: var(--font); }
+  .step-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .timer-badge { display: inline-block; background: rgba(200,146,42,0.15); color: var(--gold); font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-top: 8px; }
+
+  #categories { background: var(--light); padding: 4rem 2rem; }
+  .cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; max-width: 860px; margin: 0 auto; }
+  .cat-card { background: var(--white); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.25rem; text-align: center; cursor: pointer; transition: border-color 0.2s, transform 0.15s; }
+  .cat-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .cat-icon { font-size: 28px; margin-bottom: 0.6rem; }
+  .cat-name { font-size: 13px; color: var(--navy); font-weight: 600; }
+  .cat-count { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+  #pricing { background: var(--white); padding: 4rem 2rem; }
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; max-width: 1000px; margin: 0 auto; }
+  .plan { border: 0.5px solid var(--border); border-radius: 12px; padding: 1.75rem; background: var(--light); }
+  .plan.featured { border: 2px solid var(--gold); background: var(--navy); color: #fff; }
+  .plan-tag { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  .plan.featured .plan-tag { color: var(--gold); }
+  .plan-name { font-family: var(--font); font-size: 20px; margin-bottom: 1rem; }
+  .plan.featured .plan-name { color: #fff; }
+  .plan-price { font-size: 32px; font-family: var(--font); color: var(--navy); }
+  .plan.featured .plan-price { color: var(--gold); }
+  .plan-period { font-size: 12px; color: var(--muted); }
+  .plan.featured .plan-period { color: rgba(255,255,255,0.5); }
+  .plan-features { list-style: none; margin: 1.25rem 0; }
+  .plan-features li { font-size: 13px; padding: 6px 0; border-bottom: 0.5px solid var(--border); color: var(--navy); }
+  .plan.featured .plan-features li { color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.1); }
+  .plan-features li::before { content: "✓  "; color: var(--gold); }
+  .plan-btn { width: 100%; padding: 10px; border-radius: 8px; font-size: 13px; cursor: pointer; margin-top: 1rem; border: 1px solid var(--gold); background: transparent; color: var(--navy); transition: background 0.2s; }
+  .plan-btn:hover { background: var(--gold); color: var(--navy); }
+  .plan.featured .plan-btn { background: var(--gold); color: var(--navy); border: none; }
+  .plan.featured .plan-btn:hover { background: var(--gold2); }
+
+  #request { background: var(--light); padding: 4rem 2rem; }
+  .form-wrap { max-width: 600px; margin: 0 auto; background: var(--white); border-radius: 14px; border: 0.5px solid var(--border); padding: 2.5rem; }
+  .form-row { margin-bottom: 1.25rem; }
+  .form-row label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 6px; }
+  .form-row input, .form-row select, .form-row textarea { width: 100%; padding: 10px 14px; border: 0.5px solid var(--border); border-radius: 8px; font-size: 14px; font-family: var(--sans); color: var(--navy); background: var(--light); transition: border-color 0.2s; }
+  .form-row input:focus, .form-row select:focus, .form-row textarea:focus { outline: none; border-color: var(--gold); }
+  .form-row textarea { height: 100px; resize: vertical; }
+  .form-submit { width: 100%; background: var(--navy); color: var(--gold); border: none; padding: 13px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.2s; letter-spacing: 0.5px; }
+  .form-submit:hover { background: var(--navy2); }
+  .form-note { text-align: center; font-size: 12px; color: var(--muted); margin-top: 1rem; }
+  .success-msg { display: none; text-align: center; padding: 2rem; }
+  .success-msg .check { font-size: 48px; margin-bottom: 1rem; }
+  .success-msg h3 { font-family: var(--font); font-size: 22px; color: var(--navy); margin-bottom: 0.5rem; }
+  .success-msg p { font-size: 14px; color: var(--muted); }
+
+  #videos { background: var(--white); padding: 4rem 2rem; }
+  .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; max-width: 900px; margin: 0 auto; }
+  .video-card { background: var(--light); border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: transform 0.15s, border-color 0.2s; cursor: pointer; }
+  .video-card:hover { transform: translateY(-3px); border-color: var(--gold); }
+  .video-thumb { background: var(--navy); height: 120px; display: flex; align-items: center; justify-content: center; font-size: 40px; position: relative; }
+  .video-play { position: absolute; width: 40px; height: 40px; background: rgba(200,146,42,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .video-body { padding: 1rem; }
+  .video-cat { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); margin-bottom: 4px; }
+  .video-title { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 8px; line-height: 1.4; }
+  .video-footer { display: flex; align-items: center; justify-content: space-between; }
+  .video-price { font-size: 15px; font-weight: 700; color: var(--navy); font-family: var(--font); }
+  .video-price span { font-size: 11px; color: var(--muted); font-weight: 400; font-family: var(--sans); }
+  .video-buy { background: var(--gold); color: var(--navy); border: none; padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; }
+  .video-buy:hover { background: var(--gold2); }
+  .video-sub-note { text-align: center; margin-top: 2rem; font-size: 13px; color: var(--muted); }
+  .video-sub-note strong { color: var(--navy); }
+
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; max-width: 1000px; margin: 0 auto; }
+  footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 2rem; font-size: 12px; }
+  footer span { color: var(--gold); }
+
+  @media (max-width: 640px) {
+    .steps { grid-template-columns: 1fr; }
+    .plans { grid-template-columns: 1fr; }
+    .stats-row { gap: 1.5rem; }
+    .hero-title { font-size: 28px; }
+    .nav-links a { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Fix<span>ly</span></div>
+  <div class="nav-links">
+    <a onclick="show('home')" data-t="nav_home">Home</a>
+    <a onclick="show('how')" data-t="nav_how">How it works</a>
+    <a onclick="show('categories')" data-t="nav_cat">Services</a>
+    <a onclick="show('videos')" data-t="nav_videos">Videos</a>
+    <a onclick="show('pricing')" data-t="nav_price">Pricing</a>
+    <a onclick="show('request')" data-t="nav_req">Contact</a>
+    <select class="lang-select" id="langSel" onchange="changeLang(this.value)">
+      <option value="en">🌐 EN</option>
+      <option value="da">🇩🇰 DA</option>
+      <option value="de">🇩🇪 DE</option>
+      <option value="fr">🇫🇷 FR</option>
+      <option value="es">🇪🇸 ES</option>
+    </select>
+  </div>
+</nav>
+
+<section id="home" class="active">
+  <div style="background:var(--navy); padding:5rem 2rem 4rem; text-align:center;">
+    <div class="hero-tag" data-t="hero_tag">Expert help — under 15 minutes</div>
+    <h1 class="hero-title" data-t="hero_title">Your home, your car,<br><em>your expert.</em></h1>
+    <p class="hero-sub" data-t="hero_sub">Expert animated video guides for your home and car — made by certified professionals. Buy one for 89 kr. or get unlimited access via subscription.</p>
+    <button class="btn-primary" onclick="show('request')" data-t="hero_cta1">Request consultation</button>
+    <button class="btn-outline" onclick="show('how')" data-t="hero_cta2">See how it works</button>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-num">50+</div><div class="stat-label" data-t="stat1">video guides</div></div>
+      <div class="stat-item"><div class="stat-num">4,800+</div><div class="stat-label" data-t="stat2">problems solved</div></div>
+      <div class="stat-item"><div class="stat-num">98%</div><div class="stat-label" data-t="stat3">satisfaction rate</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div style="padding:4rem 2rem; background:var(--white);">
+    <h2 class="section-title" data-t="how_title">How it works</h2>
+    <p class="section-sub" data-t="how_sub">Three simple steps to get expert help</p>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3 data-t="step1_h">Describe your problem</h3>
+        <p data-t="step1_p">Tell us what's broken — a circuit, your washing machine, your car's engine light. Be as specific as you like.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3 data-t="step2_h">Watch the expert video</h3>
+        <p data-t="step2_p">Buy the video for 89 kr. or access all videos via subscription. Made by certified professionals.</p>
+        <span class="timer-badge" data-t="step2_badge">📹 Animated + expert voice</span>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3 data-t="step3_h">Still need help?</h3>
+        <p data-t="step3_p">Use our contact form and we will get back to you. No time pressure — just helpful answers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="categories">
+  <div style="padding:4rem 2rem; background:var(--light);">
+    <h2 class="section-title" data-t="cat_title">What we cover</h2>
+    <p class="section-sub" data-t="cat_sub">Practical expertise for everyday problems</p>
+    <div class="cat-grid">
+      <div class="cat-card" onclick="pickCat('Electricity')"><div class="cat-icon">⚡</div><div class="cat-name" data-t="cat1">Electricity</div><div class="cat-count" data-t="cat1s">Fuses, wiring, circuits</div></div>
+      <div class="cat-card" onclick="pickCat('Cars')"><div class="cat-icon">🚗</div><div class="cat-name" data-t="cat2">Cars</div><div class="cat-count" data-t="cat2s">Engine, lights, brakes</div></div>
+      <div class="cat-card" onclick="pickCat('Appliances')"><div class="cat-icon">🫧</div><div class="cat-name" data-t="cat3">Appliances</div><div class="cat-count" data-t="cat3s">Washer, dryer, oven</div></div>
+      <div class="cat-card" onclick="pickCat('Plumbing')"><div class="cat-icon">🔧</div><div class="cat-name" data-t="cat4">Plumbing</div><div class="cat-count" data-t="cat4s">Pipes, leaks, drains</div></div>
+      <div class="cat-card" onclick="pickCat('Heating')"><div class="cat-icon">🌡️</div><div class="cat-name" data-t="cat5">Heating & AC</div><div class="cat-count" data-t="cat5s">Boilers, radiators, AC</div></div>
+      <div class="cat-card" onclick="pickCat('Smart home')"><div class="cat-icon">📡</div><div class="cat-name" data-t="cat6">Smart home</div><div class="cat-count" data-t="cat6s">Routers, devices, apps</div></div>
+    </div>
+  </div>
+</section>
+
+
+<section id="videos">
+  <div style="padding:4rem 2rem; background:var(--white);">
+    <h2 class="section-title" data-t="vid_title">Expert Video Guides</h2>
+    <p class="section-sub" data-t="vid_sub">Animated videos explained by certified experts — buy one for 89 kr. or get unlimited access via subscription</p>
+    <div class="video-grid">
+      <div class="video-card">
+        <div class="video-thumb">⚡<div class="video-play">▶</div></div>
+        <div class="video-body">
+          <div class="video-cat" data-t="vc_el">Electricity</div>
+          <div class="video-title" data-t="vt1">What to do when your fuse keeps tripping</div>
+          <div class="video-footer">
+            <div class="video-price">89 kr. <span data-t="v_or">or included in subscription</span></div>
+            <button class="video-buy" data-t="v_buy">Buy</button>
+          </div>
+        </div>
+      </div>
+      <div class="video-card">
+        <div class="video-thumb">🚗<div class="video-play">▶</div></div>
+        <div class="video-body">
+          <div class="video-cat" data-t="vc_car">Cars</div>
+          <div class="video-title" data-t="vt2">Engine warning light — what does it mean?</div>
+          <div class="video-footer">
+            <div class="video-price">89 kr. <span data-t="v_or">or included in subscription</span></div>
+            <button class="video-buy" data-t="v_buy2">Buy</button>
+          </div>
+        </div>
+      </div>
+      <div class="video-card">
+        <div class="video-thumb">🫧<div class="video-play">▶</div></div>
+        <div class="video-body">
+          <div class="video-cat" data-t="vc_app">Appliances</div>
+          <div class="video-title" data-t="vt3">Washing machine won't drain — fix it yourself</div>
+          <div class="video-footer">
+            <div class="video-price">89 kr. <span data-t="v_or">or included in subscription</span></div>
+            <button class="video-buy" data-t="v_buy3">Buy</button>
+          </div>
+        </div>
+      </div>
+      <div class="video-card">
+        <div class="video-thumb">🔧<div class="video-play">▶</div></div>
+        <div class="video-body">
+          <div class="video-cat" data-t="vc_vvs">Plumbing</div>
+          <div class="video-title" data-t="vt4">Leaking pipe under the sink — step by step</div>
+          <div class="video-footer">
+            <div class="video-price">89 kr. <span data-t="v_or">or included in subscription</span></div>
+            <button class="video-buy" data-t="v_buy4">Buy</button>
+          </div>
+        </div>
+      </div>
+      <div class="video-card">
+        <div class="video-thumb">🌡️<div class="video-play">▶</div></div>
+        <div class="video-body">
+          <div class="video-cat" data-t="vc_heat">Heating</div>
+          <div class="video-title" data-t="vt5">Radiator not getting warm — how to bleed it</div>
+          <div class="video-footer">
+            <div class="video-price">89 kr. <span data-t="v_or">or included in subscription</span></div>
+            <button class="video-buy" data-t="v_buy5">Buy</button>
+          </div>
+        </div>
+      </div>
+      <div class="video-card">
+        <div class="video-thumb">📡<div class="video-play">▶</div></div>
+        <div class="video-body">
+          <div class="video-cat" data-t="vc_smart">Smart home</div>
+          <div class="video-title" data-t="vt6">WiFi keeps dropping — how to fix your router</div>
+          <div class="video-footer">
+            <div class="video-price">89 kr. <span data-t="v_or">or included in subscription</span></div>
+            <button class="video-buy" data-t="v_buy6">Buy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="video-sub-note" data-t="vid_note">Get <strong data-t="vid_note_b">unlimited access</strong> to all videos with a subscription from 49 kr./month</p>
+  </div>
+</section>
+
+<section id="pricing">
+  <div style="padding:4rem 2rem; background:var(--white);">
+    <h2 class="section-title" data-t="price_title">Simple pricing</h2>
+    <p class="section-sub" data-t="price_sub">No hidden fees. Cancel any time.</p>
+    <div class="plans">
+      <div class="plan">
+        <div class="plan-tag" data-t="plan1_tag">Starter</div>
+        <div class="plan-name" data-t="plan1_name">Basic</div>
+        <div class="plan-price">49<span style="font-size:16px">kr</span></div>
+        <div class="plan-period" data-t="plan1_period">per month</div>
+        <ul class="plan-features">
+          <li data-t="pf1_1">3 consultations / month</li>
+          <li data-t="pf1_2">Chat support</li>
+          <li data-t="pf1_3">Response in 15 min</li>
+          <li data-t="pf1_4">Access to video guides</li>
+        </ul>
+        <button class="plan-btn" data-t="plan_cta">Get started</button>
+      </div>
+      <div class="plan featured">
+        <div class="plan-tag" data-t="plan2_tag">Most popular</div>
+        <div class="plan-name" data-t="plan2_name">Pro</div>
+        <div class="plan-price">129<span style="font-size:16px">kr</span></div>
+        <div class="plan-period" data-t="plan2_period">per month</div>
+        <ul class="plan-features">
+          <li data-t="pf2_1">Unlimited consultations</li>
+          <li data-t="pf2_2">Chat + video calls</li>
+          <li data-t="pf2_3">Priority response</li>
+          <li data-t="pf2_4">Priority contact response</li>
+        </ul>
+        <button class="plan-btn" data-t="plan_cta2">Get started</button>
+      </div>
+      <div class="plan">
+        <div class="plan-tag" data-t="plan3_tag">Business</div>
+        <div class="plan-name" data-t="plan3_name">Team</div>
+        <div class="plan-price">349<span style="font-size:16px">kr</span></div>
+        <div class="plan-period" data-t="plan3_period">per month</div>
+        <ul class="plan-features">
+          <li data-t="pf3_1">Up to 5 users</li>
+          <li data-t="pf3_2">All Pro features</li>
+          <li data-t="pf3_3">Dedicated expert</li>
+          <li data-t="pf3_4">Monthly report</li>
+        </ul>
+        <button class="plan-btn" data-t="plan_cta3">Contact us</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="request">
+  <div style="padding:4rem 2rem; background:var(--light);">
+    <h2 class="section-title" data-t="req_title">Contact us</h2>
+    <p class="section-sub" data-t="req_sub">Have a question? We will get back to you as soon as possible</p>
+    <div class="form-wrap">
+      <div id="theForm">
+        <div class="form-row">
+          <label data-t="f_name">Your name</label>
+          <input type="text" id="f_name" placeholder="Anders Nielsen" />
+        </div>
+        <div class="form-row">
+          <label data-t="f_email">Email address</label>
+          <input type="email" id="f_email" placeholder="you@example.com" />
+        </div>
+        <div class="form-row">
+          <label data-t="f_cat">Category</label>
+          <select id="f_cat">
+            <option data-t="fc_placeholder">-- Select a category --</option>
+            <option data-t="fc1">Electricity</option>
+            <option data-t="fc2">Cars</option>
+            <option data-t="fc3">Appliances</option>
+            <option data-t="fc4">Plumbing</option>
+            <option data-t="fc5">Heating & AC</option>
+            <option data-t="fc6">Smart home</option>
+            <option data-t="fc7">Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label data-t="f_desc">Describe your problem</label>
+          <textarea id="f_desc" placeholder="E.g. My fuse box keeps tripping when I turn on the dishwasher..."></textarea>
+        </div>
+        <div class="form-row">
+          <label data-t="f_contact">How can we help you?</label>
+          <select id="f_contact">
+            <option data-t="fcon1">Chat</option>
+            <option data-t="fcon2">Phone call</option>
+            <option data-t="fcon3">Video call</option>
+          </select>
+        </div>
+        <button class="form-submit" onclick="submitForm()" data-t="f_submit">Send message</button>
+        <p class="form-note" data-t="f_note">We typically respond within 12 hours. No data is shared with third parties.</p>
+      </div>
+      <div class="success-msg" id="successMsg">
+        <div class="check">✅</div>
+        <h3 data-t="success_h">Message received!</h3>
+        <p data-t="success_p">Thank you for reaching out! We will get back to you within 12 hours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 <span>Fixly</span> — <span data-t="footer_tag">Expert home & vehicle consultations</span></p>
+  <p style="margin-top:6px;" data-t="footer_sub">Available in Denmark, Germany, France, Spain & UK</p>
+</footer>
+
+<script>
+const T = {
+  en: {
+    nav_home:"Home", nav_how:"How it works", nav_cat:"Services", nav_price:"Pricing", nav_req:"Contact",
+    hero_tag:"Expert help — under 15 minutes",
+    hero_title:"Your home, your car,<br><em>your expert.</em>",
+    hero_sub:"Expert animated video guides for your home and car — made by certified professionals. Buy one for 89 kr. or get unlimited access via subscription.",
+    hero_cta1:"Request consultation", hero_cta2:"See how it works",
+    stat1:"video guides", stat2:"problems solved", stat3:"satisfaction rate",
+    how_title:"How it works", how_sub:"Three simple steps to get expert help",
+    step1_h:"Describe your problem", step1_p:"Tell us what's broken — a circuit, your washing machine, your car's engine light.",
+    step2_h:"Watch the expert video", step2_p:"Buy the video for 89 kr. or access all videos via subscription. Made by certified professionals.",
+    step2_badge:"📹 Animated + expert voice",
+    step3_h:"Still need help?", step3_p:"Use our contact form and we will get back to you. No time pressure — just helpful answers.",
+    cat_title:"What we cover", cat_sub:"Practical expertise for everyday problems",
+    cat1:"Electricity", cat1s:"Fuses, wiring, circuits",
+    cat2:"Cars", cat2s:"Engine, lights, brakes",
+    cat3:"Appliances", cat3s:"Washer, dryer, oven",
+    cat4:"Plumbing", cat4s:"Pipes, leaks, drains",
+    cat5:"Heating & AC", cat5s:"Boilers, radiators, AC",
+    cat6:"Smart home", cat6s:"Routers, devices, apps",
+    price_title:"Simple pricing", price_sub:"No hidden fees. Cancel any time.",
+    plan1_tag:"Starter", plan1_name:"Basic", plan1_period:"per month",
+    pf1_1:"3 consultations / month", pf1_2:"Chat support", pf1_3:"Response in 15 min",
+    plan2_tag:"Most popular", plan2_name:"Pro", plan2_period:"per month",
+    pf2_1:"Unlimited consultations", pf2_2:"Chat + video calls", pf2_3:"Priority response", pf2_4:"Priority contact response",
+    plan3_tag:"Business", plan3_name:"Team", plan3_period:"per month",
+    pf3_1:"Up to 5 users", pf3_2:"All Pro features", pf3_3:"Dedicated expert", pf3_4:"Monthly report",
+    plan_cta:"Get started", plan_cta2:"Get started", plan_cta3:"Get started", plan_cta4:"Get started", plan_cta5:"Contact us",
+    req_title:"Contact us", req_sub:"Have a question? We will get back to you as soon as possible",
+    f_name:"Your name", f_email:"Email address", f_cat:"Category", f_desc:"Describe your problem",
+    f_contact:"Preferred contact method", f_submit:"Send message",
+    f_note:"We typically respond within 12 hours. No data is shared with third parties.",
+    fc_placeholder:"-- Select a category --", fc1:"Electricity", fc2:"Cars", fc3:"Appliances", fc4:"Plumbing", fc5:"Heating & AC", fc6:"Smart home", fc7:"Other",
+    fcon1:"Chat", fcon2:"Phone call", fcon3:"Video call",
+    success_h:"Message received!", success_p:"Thank you! We will get back to you within 12 hours.",
+    footer_tag:"Expert home & vehicle consultations", footer_sub:"Available in Denmark, Germany, France, Spain & UK",
+    nav_videos:"Videos",
+    vid_title:"Expert Video Guides", vid_sub:"Animated videos explained by certified experts — buy one for 89 kr. or get unlimited access via subscription",
+    vc_el:"Electricity", vc_car:"Cars", vc_app:"Appliances", vc_vvs:"Plumbing", vc_heat:"Heating", vc_smart:"Smart home",
+    vt1:"What to do when your fuse keeps tripping", vt2:"Engine warning light — what does it mean?",
+    vt3:"Washing machine won't drain — fix it yourself", vt4:"Leaking pipe under the sink — step by step",
+    vt5:"Radiator not getting warm — how to bleed it", vt6:"WiFi keeps dropping — how to fix your router",
+    v_or:"or included in subscription", v_buy:"Buy", v_buy2:"Buy", v_buy3:"Buy", v_buy4:"Buy", v_buy5:"Buy", v_buy6:"Buy",
+    vid_note:"Get ", vid_note_b:"unlimited access", pf1_4:"Access to video guides"
+  },
+  da: {
+    nav_home:"Hjem", nav_how:"Sådan virker det", nav_cat:"Ydelser", nav_price:"Priser", nav_req:"Kontakt",
+    hero_tag:"Eksperthjælp — under 15 minutter",
+    hero_title:"Dit hjem, din bil,<br><em>din ekspert.</em>",
+    hero_sub:"Animerede videoguider til dit hjem og din bil — lavet af certificerede fagfolk. Køb én for 89 kr. eller få ubegrænset adgang via abonnement.",
+    hero_cta1:"Anmod om konsultation", hero_cta2:"Se hvordan det virker",
+    stat1:"videoguider", stat2:"løste problemer", stat3:"tilfredshed",
+    how_title:"Sådan virker det", how_sub:"Tre enkle trin til eksperthjælp",
+    step1_h:"Beskriv dit problem", step1_p:"Fortæl os hvad der er galt — en sikring, din vaskemaskine, din bils fejllampe.",
+    step2_h:"Se ekspertvideoen", step2_p:"Køb videoen for 89 kr. eller tilgå alle videoer via abonnement. Lavet af certificerede fagfolk.",
+    step2_badge:"📹 Animeret + ekspertstemme",
+    step3_h:"Brug stadig for hjælp?", step3_p:"Brug vores kontaktformular og vi vender tilbage. Ingen tidspres — bare hjælpsomme svar.",
+    cat_title:"Hvad dækker vi", cat_sub:"Praktisk ekspertise til hverdagens problemer",
+    cat1:"El", cat1s:"Sikringer, ledninger, kredsløb",
+    cat2:"Biler", cat2s:"Motor, lys, bremser",
+    cat3:"Hvidevarer", cat3s:"Vaskemaskine, tørretumbler, ovn",
+    cat4:"VVS", cat4s:"Rør, lækager, afløb",
+    cat5:"Varme & AC", cat5s:"Kedler, radiatorer, AC",
+    cat6:"Smarthjem", cat6s:"Routere, enheder, apps",
+    price_title:"Enkle priser", price_sub:"Ingen skjulte gebyrer. Opsig når som helst.",
+    plan1_tag:"Starter", plan1_name:"Basis", plan1_period:"pr. måned",
+    pf1_1:"3 konsultationer / måned", pf1_2:"Chat-support", pf1_3:"Svar inden 15 min",
+    plan2_tag:"Mest populær", plan2_name:"Pro", plan2_period:"pr. måned",
+    pf2_1:"Ubegrænset konsultationer", pf2_2:"Chat + videoopkald", pf2_3:"Prioriteret svar", pf2_4:"Prioriteret svar på kontakt",
+    plan3_tag:"Erhverv", plan3_name:"Team", plan3_period:"pr. måned",
+    pf3_1:"Op til 5 brugere", pf3_2:"Alle Pro-funktioner", pf3_3:"Dedikeret ekspert", pf3_4:"Månedlig rapport",
+    plan_cta:"Kom i gang", plan_cta2:"Kom i gang", plan_cta3:"Kom i gang", plan_cta4:"Kom i gang", plan_cta5:"Kontakt os",
+    req_title:"Kontakt os", req_sub:"Har du et spørgsmål? Vi vender tilbage hurtigst muligt",
+    f_name:"Dit navn", f_email:"E-mailadresse", f_cat:"Kategori", f_desc:"Beskriv dit problem",
+    f_contact:"Foretrukken kontaktform", f_submit:"Send besked",
+    f_note:"Vi svarer typisk inden 12 timer. Ingen data deles med tredjepart.",
+    fc_placeholder:"-- Vælg en kategori --", fc1:"El", fc2:"Biler", fc3:"Hvidevarer", fc4:"VVS", fc5:"Varme & AC", fc6:"Smarthjem", fc7:"Andet",
+    fcon1:"Chat", fcon2:"Telefonopkald", fcon3:"Videoopkald",
+    success_h:"Besked modtaget!", success_p:"Tak for din henvendelse! Vi vender tilbage inden 12 timer.",
+    footer_tag:"Ekspertrådgivning til hjem & køretøjer", footer_sub:"Tilgængelig i Danmark, Tyskland, Frankrig, Spanien og UK",
+    nav_videos:"Videoer",
+    vid_title:"Ekspert Videoguider", vid_sub:"Animerede videoer forklaret af certificerede eksperter — køb én for 89 kr. eller få ubegrænset adgang via abonnement",
+    vc_el:"El", vc_car:"Biler", vc_app:"Hvidevarer", vc_vvs:"VVS", vc_heat:"Varme", vc_smart:"Smarthjem",
+    vt1:"Hvad gør du når sikringen springer?", vt2:"Motorlampe lyser — hvad betyder det?",
+    vt3:"Vaskemaskinen løber ikke ud — fix det selv", vt4:"Utæt rør under vasken — trin for trin",
+    vt5:"Radiator bliver ikke varm — sådan udlufter du", vt6:"WiFi falder ud — sådan fikser du din router",
+    v_or:"eller inkluderet i abonnement", v_buy:"Køb", v_buy2:"Køb", v_buy3:"Køb", v_buy4:"Køb", v_buy5:"Køb", v_buy6:"Køb",
+    vid_note:"Få ", vid_note_b:"ubegrænset adgang", pf1_4:"Adgang til videoguider"
+  },
+  de: {
+    nav_home:"Startseite", nav_how:"So funktioniert es", nav_cat:"Leistungen", nav_price:"Preise", nav_req:"Hilfe holen",
+    hero_tag:"Expertenrat — in unter 15 Minuten",
+    hero_title:"Ihr Zuhause, Ihr Auto,<br><em>Ihr Experte.</em>",
+    hero_sub:"Persönliche Beratung zu Elektrik, Haushaltsgeräten, Sanitär, Autos und mehr — von zertifizierten Experten in unter 15 Minuten.",
+    hero_cta1:"Beratung anfragen", hero_cta2:"So funktioniert es",
+    stat1:"Ø Reaktionszeit", stat2:"gelöste Probleme", stat3:"Zufriedenheitsrate",
+    how_title:"So funktioniert es", how_sub:"Drei einfache Schritte zur Expertenhilfe",
+    step1_h:"Problem beschreiben", step1_p:"Sagen Sie uns was kaputt ist — eine Sicherung, Waschmaschine oder Motorwarnleuchte.",
+    step2_h:"Sofort verbunden", step2_p:"Wir verbinden Sie mit einem zertifizierten Experten für Ihr Thema.",
+    step2_badge:"⏱ Unter 15 Minuten",
+    step3_h:"Gemeinsam lösen", step3_p:"Ihr Experte führt Sie Schritt für Schritt — per Chat, Anruf oder Video.",
+    cat_title:"Was wir abdecken", cat_sub:"Praktisches Fachwissen für alltägliche Probleme",
+    cat1:"Elektrik", cat1s:"Sicherungen, Leitungen, Schaltkreise",
+    cat2:"Autos", cat2s:"Motor, Beleuchtung, Bremsen",
+    cat3:"Haushaltsgeräte", cat3s:"Waschmaschine, Trockner, Herd",
+    cat4:"Sanitär", cat4s:"Rohre, Lecks, Abflüsse",
+    cat5:"Heizung & AC", cat5s:"Kessel, Heizkörper, Klimaanlage",
+    cat6:"Smart Home", cat6s:"Router, Geräte, Apps",
+    price_title:"Einfache Preise", price_sub:"Keine versteckten Gebühren. Jederzeit kündbar.",
+    plan1_tag:"Einstieg", plan1_name:"Basic", plan1_period:"pro Monat",
+    pf1_1:"3 Beratungen / Monat", pf1_2:"Chat-Support", pf1_3:"Antwort in 15 Min.",
+    plan2_tag:"Am beliebtesten", plan2_name:"Pro", plan2_period:"pro Monat",
+    pf2_1:"Unbegrenzte Beratungen", pf2_2:"Chat + Videoanrufe", pf2_3:"Priorisierte Antwort", pf2_4:"Experten-Nachverfolgung",
+    plan3_tag:"Geschäftlich", plan3_name:"Team", plan3_period:"pro Monat",
+    pf3_1:"Bis zu 5 Nutzer", pf3_2:"Alle Pro-Funktionen", pf3_3:"Dedizierter Experte", pf3_4:"Monatlicher Bericht",
+    plan_cta:"Loslegen", plan_cta2:"Loslegen", plan_cta3:"Kontakt aufnehmen",
+    req_title:"Beratung anfragen", req_sub:"Formular ausfüllen — ein Experte meldet sich in 15 Minuten",
+    f_name:"Ihr Name", f_email:"E-Mail-Adresse", f_cat:"Kategorie", f_desc:"Beschreiben Sie Ihr Problem",
+    f_contact:"Bevorzugte Kontaktmethode", f_submit:"Anfrage senden — Hilfe in 15 Min.",
+    f_note:"Ein Abonnement ist erforderlich. Keine Datenweitergabe.",
+    fc_placeholder:"-- Kategorie wählen --", fc1:"Elektrik", fc2:"Autos", fc3:"Geräte", fc4:"Sanitär", fc5:"Heizung & AC", fc6:"Smart Home", fc7:"Sonstiges",
+    fcon1:"Chat", fcon2:"Telefonanruf", fcon3:"Videoanruf",
+    success_h:"Anfrage erhalten!", success_p:"Ein Experte wurde benachrichtigt und meldet sich in 15 Minuten.",
+    footer_tag:"Experten-Beratung für Heim & Fahrzeug", footer_sub:"Verfügbar in Dänemark, Deutschland, Frankreich, Spanien & UK",
+    nav_videos:"Videos",
+    vid_title:"Experten-Videoguides", vid_sub:"Animierte Videos von zertifizierten Experten — kaufe eines für 89 kr. oder erhalte unbegrenzten Zugang per Abo",
+    vc_el:"Elektrik", vc_car:"Autos", vc_app:"Geräte", vc_vvs:"Sanitär", vc_heat:"Heizung", vc_smart:"Smart Home",
+    vt1:"Was tun wenn die Sicherung auslöst?", vt2:"Motorwarnleuchte — was bedeutet das?",
+    vt3:"Waschmaschine pumpt nicht ab — selbst reparieren", vt4:"Undichtes Rohr unter dem Waschbecken — Schritt für Schritt",
+    vt5:"Heizkörper wird nicht warm — so entlüften Sie", vt6:"WLAN bricht ab — so reparieren Sie Ihren Router",
+    v_or:"oder im Abo enthalten", v_buy:"Kaufen", v_buy2:"Kaufen", v_buy3:"Kaufen", v_buy4:"Kaufen", v_buy5:"Kaufen", v_buy6:"Kaufen",
+    vid_note:"Erhalten Sie ", vid_note_b:"unbegrenzten Zugang", pf1_4:"Zugang zu Videoguides"
+  },
+  fr: {
+    nav_home:"Accueil", nav_how:"Comment ça marche", nav_cat:"Services", nav_price:"Tarifs", nav_req:"Obtenir de l'aide",
+    hero_tag:"Aide experte — en moins de 15 minutes",
+    hero_title:"Votre maison, votre voiture,<br><em>votre expert.</em>",
+    hero_sub:"Consultations personnalisées sur l'électricité, les appareils, la plomberie, les voitures — par des experts certifiés, en moins de 15 minutes.",
+    hero_cta1:"Demander une consultation", hero_cta2:"Voir comment ça marche",
+    stat1:"temps de réponse moy.", stat2:"problèmes résolus", stat3:"taux de satisfaction",
+    how_title:"Comment ça marche", how_sub:"Trois étapes simples pour obtenir de l'aide",
+    step1_h:"Décrivez votre problème", step1_p:"Dites-nous ce qui ne va pas — un fusible, votre lave-linge, le voyant moteur.",
+    step2_h:"Mis en relation instantanément", step2_p:"Nous vous connectons avec un expert certifié dans votre domaine.",
+    step2_badge:"⏱ Moins de 15 minutes",
+    step3_h:"Résolvez ensemble", step3_p:"Votre expert vous guide étape par étape — par chat, appel ou vidéo.",
+    cat_title:"Ce que nous couvrons", cat_sub:"Expertise pratique pour les problèmes quotidiens",
+    cat1:"Électricité", cat1s:"Fusibles, câblage, circuits",
+    cat2:"Voitures", cat2s:"Moteur, feux, freins",
+    cat3:"Appareils", cat3s:"Lave-linge, sèche-linge, four",
+    cat4:"Plomberie", cat4s:"Tuyaux, fuites, évacuations",
+    cat5:"Chauffage & AC", cat5s:"Chaudières, radiateurs, AC",
+    cat6:"Maison connectée", cat6s:"Routeurs, appareils, apps",
+    price_title:"Tarifs simples", price_sub:"Pas de frais cachés. Résiliation à tout moment.",
+    plan1_tag:"Débutant", plan1_name:"Basique", plan1_period:"par mois",
+    pf1_1:"3 consultations / mois", pf1_2:"Support par chat", pf1_3:"Réponse en 15 min",
+    plan2_tag:"Le plus populaire", plan2_name:"Pro", plan2_period:"par mois",
+    pf2_1:"Consultations illimitées", pf2_2:"Chat + appels vidéo", pf2_3:"Réponse prioritaire", pf2_4:"Suivi expert",
+    plan3_tag:"Entreprise", plan3_name:"Équipe", plan3_period:"par mois",
+    pf3_1:"Jusqu'à 5 utilisateurs", pf3_2:"Toutes les fonctions Pro", pf3_3:"Expert dédié", pf3_4:"Rapport mensuel",
+    plan_cta:"Commencer", plan_cta2:"Commencer", plan_cta3:"Nous contacter",
+    req_title:"Demander une consultation", req_sub:"Remplissez le formulaire — un expert vous contactera sous 15 minutes",
+    f_name:"Votre nom", f_email:"Adresse e-mail", f_cat:"Catégorie", f_desc:"Décrivez votre problème",
+    f_contact:"Méthode de contact préférée", f_submit:"Envoyer la demande — aide en 15 min",
+    f_note:"Un abonnement est requis. Aucune donnée partagée avec des tiers.",
+    fc_placeholder:"-- Choisir une catégorie --", fc1:"Électricité", fc2:"Voitures", fc3:"Appareils", fc4:"Plomberie", fc5:"Chauffage & AC", fc6:"Maison connectée", fc7:"Autre",
+    fcon1:"Chat", fcon2:"Appel téléphonique", fcon3:"Appel vidéo",
+    success_h:"Demande reçue !", success_p:"Un expert a été notifié et vous contactera sous 15 minutes.",
+    footer_tag:"Consultations experts maison & véhicule", footer_sub:"Disponible au Danemark, Allemagne, France, Espagne & UK",
+    nav_videos:"Vidéos",
+    vid_title:"Guides Vidéo Experts", vid_sub:"Vidéos animées expliquées par des experts certifiés — achetez-en une pour 89 kr. ou accès illimité via abonnement",
+    vc_el:"Électricité", vc_car:"Voitures", vc_app:"Appareils", vc_vvs:"Plomberie", vc_heat:"Chauffage", vc_smart:"Maison connectée",
+    vt1:"Que faire quand le fusible saute ?", vt2:"Voyant moteur allumé — que signifie-t-il ?",
+    vt3:"La machine à laver ne vidange pas — réparez-le vous-même", vt4:"Tuyau qui fuit sous l'évier — étape par étape",
+    vt5:"Radiateur froid — comment le purger", vt6:"WiFi instable — comment réparer votre routeur",
+    v_or:"ou inclus dans l'abonnement", v_buy:"Acheter", v_buy2:"Acheter", v_buy3:"Acheter", v_buy4:"Acheter", v_buy5:"Acheter", v_buy6:"Acheter",
+    vid_note:"Obtenez un ", vid_note_b:"accès illimité", pf1_4:"Accès aux guides vidéo"
+  },
+  es: {
+    nav_home:"Inicio", nav_how:"Cómo funciona", nav_cat:"Servicios", nav_price:"Precios", nav_req:"Obtener ayuda",
+    hero_tag:"Ayuda experta — en menos de 15 minutos",
+    hero_title:"Tu hogar, tu coche,<br><em>tu experto.</em>",
+    hero_sub:"Consultas personales sobre electricidad, electrodomésticos, fontanería, coches y más — de expertos certificados en menos de 15 minutos.",
+    hero_cta1:"Solicitar consulta", hero_cta2:"Ver cómo funciona",
+    stat1:"tiempo de respuesta", stat2:"problemas resueltos", stat3:"satisfacción",
+    how_title:"Cómo funciona", how_sub:"Tres simples pasos para obtener ayuda experta",
+    step1_h:"Describe tu problema", step1_p:"Dinos qué está roto — un circuito, tu lavadora, la luz de motor del coche.",
+    step2_h:"Conectado al instante", step2_p:"Te conectamos con un experto certificado en tu área.",
+    step2_badge:"⏱ Menos de 15 minutos",
+    step3_h:"Resolvedlo juntos", step3_p:"Tu experto te guía paso a paso — por chat, llamada o video.",
+    cat_title:"Qué cubrimos", cat_sub:"Experiencia práctica para problemas cotidianos",
+    cat1:"Electricidad", cat1s:"Fusibles, cableado, circuitos",
+    cat2:"Coches", cat2s:"Motor, luces, frenos",
+    cat3:"Electrodomésticos", cat3s:"Lavadora, secadora, horno",
+    cat4:"Fontanería", cat4s:"Tuberías, fugas, desagües",
+    cat5:"Calefacción & AC", cat5s:"Calderas, radiadores, AC",
+    cat6:"Hogar inteligente", cat6s:"Routers, dispositivos, apps",
+    price_title:"Precios sencillos", price_sub:"Sin cargos ocultos. Cancela cuando quieras.",
+    plan1_tag:"Inicio", plan1_name:"Básico", plan1_period:"por mes",
+    pf1_1:"3 consultas / mes", pf1_2:"Soporte por chat", pf1_3:"Respuesta en 15 min",
+    plan2_tag:"Más popular", plan2_name:"Pro", plan2_period:"por mes",
+    pf2_1:"Consultas ilimitadas", pf2_2:"Chat + videollamadas", pf2_3:"Respuesta prioritaria", pf2_4:"Seguimiento experto",
+    plan3_tag:"Empresa", plan3_name:"Equipo", plan3_period:"por mes",
+    pf3_1:"Hasta 5 usuarios", pf3_2:"Todas las funciones Pro", pf3_3:"Experto dedicado", pf3_4:"Informe mensual",
+    plan_cta:"Empezar", plan_cta2:"Empezar", plan_cta3:"Contáctanos",
+    req_title:"Solicitar una consulta", req_sub:"Rellena el formulario — un experto te contactará en 15 minutos",
+    f_name:"Tu nombre", f_email:"Correo electrónico", f_cat:"Categoría", f_desc:"Describe tu problema",
+    f_contact:"Método de contacto preferido", f_submit:"Enviar solicitud — ayuda en 15 min",
+    f_note:"Se requiere suscripción. No se comparten datos con terceros.",
+    fc_placeholder:"-- Seleccionar categoría --", fc1:"Electricidad", fc2:"Coches", fc3:"Electrodomésticos", fc4:"Fontanería", fc5:"Calefacción & AC", fc6:"Hogar inteligente", fc7:"Otro",
+    fcon1:"Chat", fcon2:"Llamada telefónica", fcon3:"Videollamada",
+    success_h:"¡Solicitud recibida!", success_p:"Un experto ha sido notificado y te contactará en 15 minutos.",
+    footer_tag:"Consultas expertas para hogar y vehículo", footer_sub:"Disponible en Dinamarca, Alemania, Francia, España y Reino Unido",
+    nav_videos:"Vídeos",
+    vid_title:"Guías de Vídeo Experto", vid_sub:"Vídeos animados explicados por expertos certificados — compra uno por 89 kr. o acceso ilimitado con suscripción",
+    vc_el:"Electricidad", vc_car:"Coches", vc_app:"Electrodomésticos", vc_vvs:"Fontanería", vc_heat:"Calefacción", vc_smart:"Hogar inteligente",
+    vt1:"¿Qué hacer cuando salta el fusible?", vt2:"Luz de motor encendida — ¿qué significa?",
+    vt3:"La lavadora no desagua — arréglalo tú mismo", vt4:"Tubería con fuga bajo el lavabo — paso a paso",
+    vt5:"Radiador frío — cómo purgarlo", vt6:"WiFi inestable — cómo arreglar tu router",
+    v_or:"o incluido en la suscripción", v_buy:"Comprar", v_buy2:"Comprar", v_buy3:"Comprar", v_buy4:"Comprar", v_buy5:"Comprar", v_buy6:"Comprar",
+    vid_note:"Obtén ", vid_note_b:"acceso ilimitado", pf1_4:"Acceso a guías de vídeo"
+  }
+};
+
+function show(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function changeLang(lang) {
+  const dict = T[lang];
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if (dict[key] !== undefined) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = dict[key];
+      } else if (el.tagName === 'OPTION') {
+        el.textContent = dict[key];
+      } else {
+        el.innerHTML = dict[key];
+      }
+    }
+  });
+}
+
+function pickCat(cat) {
+  show('request');
+  setTimeout(() => {
+    const sel = document.getElementById('f_cat');
+    for (let i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].text.toLowerCase().includes(cat.toLowerCase())) {
+        sel.selectedIndex = i; break;
+      }
+    }
+  }, 100);
+}
+
+function submitForm() {
+  const name = document.getElementById('f_name').value;
+  const email = document.getElementById('f_email').value;
+  if (!name || !email) { alert('Please fill in your name and email.'); return; }
+  document.getElementById('theForm').style.display = 'none';
+  document.getElementById('successMsg').style.display = 'block';
+}
+</script>
+</body>
+</html>
